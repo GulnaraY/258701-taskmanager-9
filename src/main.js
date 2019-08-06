@@ -10,13 +10,13 @@
   const createMenuLayout = () => {
     const controlPanel = document.querySelector(`.main__control`);
     const menu = document.createElement(`section`);
-    let menuFragment = document.createDocumentFragment();
+    const menuFragment = document.createDocumentFragment();
     menu.classList.add(`control__btn-wrap`);
     const newTaskControl = document.createElement(`input`);
     newTaskControl.name = `control`;
     newTaskControl.type = `radio`;
     newTaskControl.id = `control__new-task`;
-    newTaskControl.className = `control__input visually-hidden`;
+    newTaskControl.className = `control__input ${VISUALLY_HIDDEN}`;
     const newTaskControlLabel = document.createElement(`label`);
     newTaskControlLabel.setAttribute(`for`, `control__new-task`);
     newTaskControlLabel.className = `control__label control__label--new-task`;
@@ -65,6 +65,58 @@
     searchContainer.appendChild(searchFragment);
     renderElement(mainContainer, searchContainer);
   };
+
+  const createFiltersLayout = () => {
+    const filtersContainer = document.createElement(`section`);
+    const Filter = function (id, checked, disabled, text, quantity) {
+      this.id = id;
+      this.checked = checked;
+      this.disabled = disabled;
+      this.text = text;
+      this.quantity = quantity;
+    };
+    const FILTERS = [
+      new Filter(`filter__all`, true, false, `ALL `, 13),
+      new Filter(`filter__overdue`, false, true, `OVERDUE `, 0),
+      new Filter(`filter__today`, false, true, `TODAY `, 0),
+      new Filter(`filter__favorites`, false, false, `FAVORITES `, 1),
+      new Filter(`filter__repeating`, false, false, `REPEATING `, 1),
+      new Filter(`filter__tags`, false, false, `TAGS `, 1),
+      new Filter(`filter__archive`, false, false, `ARCHIVE `, 115)
+    ];
+    filtersContainer.className = `main__filter filter container`;
+    const filtersFragment = document.createDocumentFragment();
+    const filterInputTemplate = document.createElement(`input`);
+    const filterLabelTemplate = document.createElement(`label`);
+    filterInputTemplate.type = `radio`;
+    filterInputTemplate.className = `filter__input ${VISUALLY_HIDDEN}`;
+    filterInputTemplate.name = `filter`;
+    filterInputTemplate.checked = false;
+    filterInputTemplate.disabled = false;
+    filterLabelTemplate.classList = `filter__label`;
+
+    FILTERS.forEach((element) => {
+      const filterElement = filterInputTemplate.cloneNode();
+      const filterLabel = filterLabelTemplate.cloneNode(true);
+      filterElement.id = element.id;
+      filterLabel.setAttribute(`for`, element.id);
+      filterElement.checked = element.checked;
+      filterElement.disabled = element.disabled;
+      filterLabel.innerHTML = `${element.text} <span class = "${element.id}-count">${element.quantity}</span>`;
+      filtersFragment.appendChild(filterElement);
+      filtersFragment.appendChild(filterLabel);
+    });
+    filtersContainer.appendChild(filtersFragment);
+    renderElement(mainContainer, filtersContainer);
+  };
+
+  const createContentLayout = () => {
+    const board = document.createElement(`section`);
+    
+  };
+
   createMenuLayout();
   createSearchLayout();
+  createFiltersLayout();
+  createContentLayout();
 })();
