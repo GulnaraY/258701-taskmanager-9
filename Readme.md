@@ -1,7 +1,7 @@
 # Личный проект «Менеджер задач» [![Build status][travis-image]][travis-url]
 
 * Студент: [Гульнара Якупова](https://up.htmlacademy.ru/ecmascript/9/user/258701).
-* Наставник: `Неизвестно`.
+* Наставник: [Алексей Балесный](https://up.htmlacademy.ru/ecmascript/9/user/221665).
 
 ---
 
