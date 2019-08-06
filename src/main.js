@@ -1,7 +1,8 @@
 'use strict';
 
 (function () {
-
+  const VISUALLY_HIDDEN = `visually-hidden`;
+  const mainContainer = document.querySelector(`main.main`);
   const renderElement = (container, layout) => {
     container.appendChild(layout);
   };
@@ -46,6 +47,24 @@
     renderElement(controlPanel, menu);
   };
 
-
+  const createSearchLayout = () => {
+    const searchContainer = document.createElement(`section`);
+    searchContainer.className = `main__search search container`;
+    const searchFragment = document.createDocumentFragment();
+    const search = document.createElement(`input`);
+    search.type = `text`;
+    search.id = `search__input`;
+    search.className = `search__input`;
+    search.placeholder = `START TYPING — SEARCH BY WORD, #HASHTAG OR DATE`;
+    const searchLabel = document.createElement(`input`);
+    searchLabel.setAttribute(`for`, `search__input`);
+    searchLabel.className = VISUALLY_HIDDEN;
+    searchLabel.textContent = `Search`;
+    searchFragment.appendChild(search);
+    searchFragment.appendChild(searchLabel);
+    searchContainer.appendChild(searchFragment);
+    renderElement(mainContainer, searchContainer);
+  };
   createMenuLayout();
+  createSearchLayout();
 })();
