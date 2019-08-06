@@ -3,6 +3,9 @@
 (function () {
   const VISUALLY_HIDDEN = `visually-hidden`;
   const mainContainer = document.querySelector(`main.main`);
+  const board = document.createElement(`section`);
+  const tasksContainer = document.createElement(`div`);
+
   const renderElement = (container, layout) => {
     container.appendChild(layout);
   };
@@ -111,12 +114,35 @@
   };
 
   const createContentLayout = () => {
-    const board = document.createElement(`section`);
-    
+    board.classList = `board container`;
+    renderElement(mainContainer, board);
+  };
+
+  const createBoardFiltersLayout = () => {
+    const BOARD_FILTERS = [`SORT BY DEFAULT`, `SORT BY DATE up`, `SORT BY DATE down`];
+    const boardFiltersContainer = document.createElement(`div`);
+    const boardFiltersFragment = document.createDocumentFragment();
+    const boardFilterTemplate = document.createElement(`a`);
+    boardFilterTemplate.href = `#`;
+    boardFilterTemplate.className = `board__filter`;
+    BOARD_FILTERS.forEach((element) => {
+      const boardFilter = boardFilterTemplate.cloneNode();
+      boardFilter.textContent = element;
+      boardFiltersFragment.appendChild(boardFilter);
+    });
+    boardFiltersContainer.appendChild(boardFiltersFragment);
+    renderElement(board, boardFiltersContainer);
+  };
+
+  const createTasksContainerLayout = () => {
+    tasksContainer.className = `board__tasks`;
+    renderElement(board, tasksContainer);
   };
 
   createMenuLayout();
   createSearchLayout();
   createFiltersLayout();
   createContentLayout();
+  createBoardFiltersLayout();
+  createTasksContainerLayout();
 })();
