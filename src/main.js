@@ -2,6 +2,7 @@
 
 (function () {
   const VISUALLY_HIDDEN = `visually-hidden`;
+  const COLORS = [`black`, `yellow`, `blue`, `green`, `pink`];
   const mainContainer = document.querySelector(`main.main`);
   const board = document.createElement(`section`);
   const tasksContainer = document.createElement(`div`);
@@ -123,6 +124,7 @@
     const boardFiltersContainer = document.createElement(`div`);
     const boardFiltersFragment = document.createDocumentFragment();
     const boardFilterTemplate = document.createElement(`a`);
+    boardFiltersContainer.className = `board__filter-list`;
     boardFilterTemplate.href = `#`;
     boardFilterTemplate.className = `board__filter`;
     BOARD_FILTERS.forEach((element) => {
@@ -139,10 +141,105 @@
     renderElement(board, tasksContainer);
   };
 
+  const createCardLayout = () => {
+    const Card = function (text, date, time, color, tags) {
+      this.text = text;
+      this.date = date;
+      this.time = time;
+      this.color = color;
+      this.tags = tags;
+    };
+
+    const cards = [
+      new Card(`Example default task with default color.`, `23 September`, `11:15 PM`, COLORS[0], [`#todo`, `#personal`, `#important`])
+    ];
+
+    const Control = function (id, disabled) {
+      this.id = id;
+      this.disabled = disabled;
+    };
+
+    const controls = [
+      new Control(`edit`, false),
+      new Control(`archive`, false),
+      new Control(`favorites`, true)
+    ];
+    const cardsFragment = document.createDocumentFragment();
+    cards.forEach((element) => {
+      const card = document.createElement(`article`);
+      card.className = `card`;
+      card.classList.add(`card--${element.color}`);
+      const cardForm = document.createElement(`div`);
+      cardForm.className = `card__form`;
+      const cardInner = document.createElement(`div`);
+      cardInner.className = `card__inner`;
+      const cardControl = document.createElement(`div`);
+      cardControl.className = `card__control`;
+      card.appendChild(cardForm).appendChild(cardInner).appendChild(cardControl);
+      const buttonFragment = document.createDocumentFragment();
+      controls.forEach((control) => {
+        const button = document.createElement(`button`);
+        button.type = `button`;
+        button.className = `card__btn card__btn--${control.id}`;
+        button.textContent = control.id;
+        if (control.disabled) {
+          button.classList.add(`card__btn--disabled`);
+        }
+        buttonFragment.appendChild(button);
+      });
+      cardControl.appendChild(buttonFragment);
+      const colorBar = document.createElement(`div`);
+      colorBar.className = `card__color-bar`;
+      cardInner.appendChild(colorBar);
+      const textWrap = document.createElement(`div`);
+      textWrap.className = `card__textarea-wrap`;
+      const text = document.createElement(`p`);
+      text.className = `card__text`;
+      text.textContent = element.text;
+      textWrap.appendChild(text);
+      cardInner.appendChild(textWrap);
+      const cardSettings = document.createElement(`div`);
+      cardSettings.className = `card__settings`;
+      const cardDetails = document.createElement(`div`);
+      cardDetails.className = `card__details`;
+      const cardDates = document.createElement(`div`);
+      cardDates.className = `card__dates`;
+      const cardDateDeadline = document.createElement(`div`);
+      cardDateDeadline.className = `card__date-deadline`;
+      const cardDeadlineWrap = document.createElement(`p`);
+      cardDeadlineWrap.className = `card__input-deadline-wrap`;
+      cardInner.appendChild(cardSettings).appendChild(cardDetails).appendChild(cardDates).appendChild(cardDateDeadline).appendChild(cardDeadlineWrap);
+      const cardDate = document.createElement(`span`);
+      cardDate.className = `card__date`;
+      cardDate.textContent = element.date;
+      const cardTime = document.createElement(`span`);
+      cardTime.textContent = element.time;
+      cardTime.className = `card__time`;
+      cardDeadlineWrap.appendChild(cardDate);
+      cardDeadlineWrap.appendChild(cardTime);
+      const cardHashtag = document.createElement(`div`);
+      const cardHashtagList = document.createElement(`div`);
+      cardHashtag.className = `card__hashtag`;
+      cardHashtagList.className = `card__hashtag-list`;
+      cardDetails.appendChild(cardHashtag).appendChild(cardHashtagList);
+      element.tags.forEach((tag) => {
+        const cardHashtagInner = document.createElement(`span`);
+        cardHashtagInner.className = `card__hashtag-inner`;
+        const cardHashtagName = document.createElement(`span`);
+        cardHashtagName.className = `card__hashtag-name`;
+        cardHashtagName.textContent = tag;
+        cardHashtagList.appendChild(cardHashtagInner).appendChild(cardHashtagName);
+      });
+      cardsFragment.appendChild(card);
+    });
+    renderElement(tasksContainer, cardsFragment);
+  };
+
   createMenuLayout();
   createSearchLayout();
   createFiltersLayout();
   createContentLayout();
   createBoardFiltersLayout();
   createTasksContainerLayout();
+  createCardLayout();
 })();
