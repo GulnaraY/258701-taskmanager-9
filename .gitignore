@@ -3,7 +3,7 @@
 Thumbs.db
 
 # Файлы редактора
-.idea
+.ideas
 *.sublime*
 .vscode
 
@@ -13,3 +13,7 @@ node_modules/
 
 # Папка с собранными файлами проекта
 build/
+
+#Собранные файлы
+public/bundle.js,
+public/bundle.js.map
