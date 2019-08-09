@@ -1,245 +1,493 @@
 'use strict';
 
-(function () {
-  const VISUALLY_HIDDEN = `visually-hidden`;
-  const COLORS = [`black`, `yellow`, `blue`, `green`, `pink`];
-  const mainContainer = document.querySelector(`main.main`);
-  const board = document.createElement(`section`);
-  const tasksContainer = document.createElement(`div`);
+const render = (container, template, place) => {
+  container.insertAdjacentHTML(place, template);
+};
 
-  const renderElement = (container, layout) => {
-    container.appendChild(layout);
-  };
+const createMenuLayout = () => {
+  return `<section class="control__btn-wrap">
+    <input
+      type="radio"
+      name="control"
+      id="control__new-task"
+      class="control__input visually-hidden"
+    />
+    <label for="control__new-task" class="control__label control__label--new-task"
+      >+ ADD NEW TASK</label
+    >
+    <input
+      type="radio"
+      name="control"
+      id="control__task"
+      class="control__input visually-hidden"
+      checked
+    />
+    <label for="control__task" class="control__label">TASKS</label>
+    <input
+      type="radio"
+      name="control"
+      id="control__statistic"
+      class="control__input visually-hidden"
+    />
+    <label for="control__statistic" class="control__label"
+      >STATISTICS</label
+    >
+  </section>`;
+};
 
-  const createMenuLayout = () => {
-    const controlPanel = document.querySelector(`.main__control`);
-    const menu = document.createElement(`section`);
-    const menuFragment = document.createDocumentFragment();
-    menu.classList.add(`control__btn-wrap`);
-    const newTaskControl = document.createElement(`input`);
-    newTaskControl.name = `control`;
-    newTaskControl.type = `radio`;
-    newTaskControl.id = `control__new-task`;
-    newTaskControl.className = `control__input ${VISUALLY_HIDDEN}`;
-    const newTaskControlLabel = document.createElement(`label`);
-    newTaskControlLabel.setAttribute(`for`, `control__new-task`);
-    newTaskControlLabel.className = `control__label control__label--new-task`;
-    newTaskControlLabel.textContent = `+ ADD NEW TASK`;
-    menuFragment.appendChild(newTaskControl);
-    menuFragment.appendChild(newTaskControlLabel);
+const createSearchLayout = () => {
+  return `<section class="main__search search container">
+    <input
+      type="text"
+      id="search__input"
+      class="search__input"
+      placeholder="START TYPING — SEARCH BY WORD, #HASHTAG OR DATE"
+    />
+    <label class="visually-hidden" for="search__input">Search</label>
+  </section>`;
+};
 
-    const taskControl = newTaskControl.cloneNode();
-    taskControl.id = `control__task`;
-    taskControl.checked = true;
-    const taskControlLabel = newTaskControlLabel.cloneNode();
-    taskControlLabel.setAttribute(`for`, `control__task`);
-    taskControlLabel.className = `control__label`;
-    taskControlLabel.textContent = `TASKS`;
-    menuFragment.appendChild(taskControl);
-    menuFragment.appendChild(taskControlLabel);
+const createFiltersLayout = () => {
+  return `<section class="main__filter filter container">
+    <input
+      type="radio"
+      id="filter__all"
+      class="filter__input visually-hidden"
+      name="filter"
+      checked
+    />
+    <label for="filter__all" class="filter__label">
+      All <span class="filter__all-count">13</span></label
+    >
+    <input
+      type="radio"
+      id="filter__overdue"
+      class="filter__input visually-hidden"
+      name="filter"
+      disabled
+    />
+    <label for="filter__overdue" class="filter__label"
+      >Overdue <span class="filter__overdue-count">0</span></label
+    >
+    <input
+      type="radio"
+      id="filter__today"
+      class="filter__input visually-hidden"
+      name="filter"
+      disabled
+    />
+    <label for="filter__today" class="filter__label"
+      >Today <span class="filter__today-count">0</span></label
+    >
+    <input
+      type="radio"
+      id="filter__favorites"
+      class="filter__input visually-hidden"
+      name="filter"
+    />
+    <label for="filter__favorites" class="filter__label"
+      >Favorites <span class="filter__favorites-count">1</span></label
+    >
+    <input
+      type="radio"
+      id="filter__repeating"
+      class="filter__input visually-hidden"
+      name="filter"
+    />
+    <label for="filter__repeating" class="filter__label"
+      >Repeating <span class="filter__repeating-count">1</span></label
+    >
+    <input
+      type="radio"
+      id="filter__tags"
+      class="filter__input visually-hidden"
+      name="filter"
+    />
+    <label for="filter__tags" class="filter__label"
+      >Tags <span class="filter__tags-count">1</span></label
+    >
+    <input
+      type="radio"
+      id="filter__archive"
+      class="filter__input visually-hidden"
+      name="filter"
+    />
+    <label for="filter__archive" class="filter__label"
+      >Archive <span class="filter__archive-count">115</span></label
+    >
+  </section>`;
+};
 
-    const statistics = newTaskControl.cloneNode();
-    statistics.id = `control__statistic`;
-    const statisticsLabel = newTaskControlLabel.cloneNode();
-    statisticsLabel.setAttribute(`for`, `control__statistic`);
-    statisticsLabel.className = `control__label`;
-    statisticsLabel.textContent = `STATISTICS`;
-    menuFragment.appendChild(statistics);
-    menuFragment.appendChild(statisticsLabel);
+const createBoardLayout = () => {
+  return `<section class="board container">
+    <div class="board__tasks"></div>
+  </section>`;
+};
 
-    menu.appendChild(menuFragment);
-    renderElement(controlPanel, menu);
-  };
+const createSortingLayout = () => {
+  return `<div class="board__filter-list">
+    <a href="#" class="board__filter">SORT BY DEFAULT</a>
+    <a href="#" class="board__filter">SORT BY DATE up</a>
+    <a href="#" class="board__filter">SORT BY DATE down</a>
+  </div>`;
+};
 
-  const createSearchLayout = () => {
-    const searchContainer = document.createElement(`section`);
-    searchContainer.className = `main__search search container`;
-    const searchFragment = document.createDocumentFragment();
-    const search = document.createElement(`input`);
-    search.type = `text`;
-    search.id = `search__input`;
-    search.className = `search__input`;
-    search.placeholder = `START TYPING — SEARCH BY WORD, #HASHTAG OR DATE`;
-    const searchLabel = document.createElement(`input`);
-    searchLabel.setAttribute(`for`, `search__input`);
-    searchLabel.className = VISUALLY_HIDDEN;
-    searchLabel.textContent = `Search`;
-    searchFragment.appendChild(search);
-    searchFragment.appendChild(searchLabel);
-    searchContainer.appendChild(searchFragment);
-    renderElement(mainContainer, searchContainer);
-  };
+const createTaskEditLayout = () => {
+  return `<article class="card card--edit card--yellow card--repeat">
+    <form class="card__form" method="get">
+      <div class="card__inner">
+        <div class="card__control">
+          <button type="button" class="card__btn card__btn--archive">
+            archive
+          </button>
+          <button
+            type="button"
+            class="card__btn card__btn--favorites card__btn--disabled"
+          >
+            favorites
+          </button>
+        </div>
 
-  const createFiltersLayout = () => {
-    const filtersContainer = document.createElement(`section`);
-    const Filter = function (id, checked, disabled, text, quantity) {
-      this.id = id;
-      this.checked = checked;
-      this.disabled = disabled;
-      this.text = text;
-      this.quantity = quantity;
-    };
-    const FILTERS = [
-      new Filter(`filter__all`, true, false, `ALL `, 13),
-      new Filter(`filter__overdue`, false, true, `OVERDUE `, 0),
-      new Filter(`filter__today`, false, true, `TODAY `, 0),
-      new Filter(`filter__favorites`, false, false, `FAVORITES `, 1),
-      new Filter(`filter__repeating`, false, false, `REPEATING `, 1),
-      new Filter(`filter__tags`, false, false, `TAGS `, 1),
-      new Filter(`filter__archive`, false, false, `ARCHIVE `, 115)
-    ];
-    filtersContainer.className = `main__filter filter container`;
-    const filtersFragment = document.createDocumentFragment();
-    const filterInputTemplate = document.createElement(`input`);
-    const filterLabelTemplate = document.createElement(`label`);
-    filterInputTemplate.type = `radio`;
-    filterInputTemplate.className = `filter__input ${VISUALLY_HIDDEN}`;
-    filterInputTemplate.name = `filter`;
-    filterInputTemplate.checked = false;
-    filterInputTemplate.disabled = false;
-    filterLabelTemplate.classList = `filter__label`;
+        <div class="card__color-bar">
+          <svg class="card__color-bar-wave" width="100%" height="10">
+            <use xlink:href="#wave"></use>
+          </svg>
+        </div>
 
-    FILTERS.forEach((element) => {
-      const filterElement = filterInputTemplate.cloneNode();
-      const filterLabel = filterLabelTemplate.cloneNode(true);
-      filterElement.id = element.id;
-      filterLabel.setAttribute(`for`, element.id);
-      filterElement.checked = element.checked;
-      filterElement.disabled = element.disabled;
-      filterLabel.innerHTML = `${element.text} <span class = "${element.id}-count">${element.quantity}</span>`;
-      filtersFragment.appendChild(filterElement);
-      filtersFragment.appendChild(filterLabel);
-    });
-    filtersContainer.appendChild(filtersFragment);
-    renderElement(mainContainer, filtersContainer);
-  };
+        <div class="card__textarea-wrap">
+          <label>
+            <textarea
+              class="card__text"
+              placeholder="Start typing your text here..."
+              name="text"
+            >Here is a card with filled data</textarea>
+          </label>
+        </div>
 
-  const createContentLayout = () => {
-    board.classList = `board container`;
-    renderElement(mainContainer, board);
-  };
+        <div class="card__settings">
+          <div class="card__details">
+            <div class="card__dates">
+              <button class="card__date-deadline-toggle" type="button">
+                date: <span class="card__date-status">yes</span>
+              </button>
 
-  const createBoardFiltersLayout = () => {
-    const BOARD_FILTERS = [`SORT BY DEFAULT`, `SORT BY DATE up`, `SORT BY DATE down`];
-    const boardFiltersContainer = document.createElement(`div`);
-    const boardFiltersFragment = document.createDocumentFragment();
-    const boardFilterTemplate = document.createElement(`a`);
-    boardFiltersContainer.className = `board__filter-list`;
-    boardFilterTemplate.href = `#`;
-    boardFilterTemplate.className = `board__filter`;
-    BOARD_FILTERS.forEach((element) => {
-      const boardFilter = boardFilterTemplate.cloneNode();
-      boardFilter.textContent = element;
-      boardFiltersFragment.appendChild(boardFilter);
-    });
-    boardFiltersContainer.appendChild(boardFiltersFragment);
-    renderElement(board, boardFiltersContainer);
-  };
+              <fieldset class="card__date-deadline">
+                <label class="card__input-deadline-wrap">
+                  <input
+                    class="card__date"
+                    type="text"
+                    placeholder=""
+                    name="date"
+                    value="23 September 11:15 PM"
+                  />
+                </label>
+              </fieldset>
 
-  const createTasksContainerLayout = () => {
-    tasksContainer.className = `board__tasks`;
-    renderElement(board, tasksContainer);
-  };
+              <button class="card__repeat-toggle" type="button">
+                repeat:<span class="card__repeat-status">yes</span>
+              </button>
 
-  const createCardLayout = () => {
-    const Card = function (text, date, time, color, tags) {
-      this.text = text;
-      this.date = date;
-      this.time = time;
-      this.color = color;
-      this.tags = tags;
-    };
+              <fieldset class="card__repeat-days">
+                <div class="card__repeat-days-inner">
+                  <input
+                    class="visually-hidden card__repeat-day-input"
+                    type="checkbox"
+                    id="repeat-mo-4"
+                    name="repeat"
+                    value="mo"
+                  />
+                  <label class="card__repeat-day" for="repeat-mo-4"
+                    >mo</label
+                  >
+                  <input
+                    class="visually-hidden card__repeat-day-input"
+                    type="checkbox"
+                    id="repeat-tu-4"
+                    name="repeat"
+                    value="tu"
+                    checked
+                  />
+                  <label class="card__repeat-day" for="repeat-tu-4"
+                    >tu</label
+                  >
+                  <input
+                    class="visually-hidden card__repeat-day-input"
+                    type="checkbox"
+                    id="repeat-we-4"
+                    name="repeat"
+                    value="we"
+                  />
+                  <label class="card__repeat-day" for="repeat-we-4"
+                    >we</label
+                  >
+                  <input
+                    class="visually-hidden card__repeat-day-input"
+                    type="checkbox"
+                    id="repeat-th-4"
+                    name="repeat"
+                    value="th"
+                  />
+                  <label class="card__repeat-day" for="repeat-th-4"
+                    >th</label
+                  >
+                  <input
+                    class="visually-hidden card__repeat-day-input"
+                    type="checkbox"
+                    id="repeat-fr-4"
+                    name="repeat"
+                    value="fr"
+                    checked
+                  />
+                  <label class="card__repeat-day" for="repeat-fr-4"
+                    >fr</label
+                  >
+                  <input
+                    class="visually-hidden card__repeat-day-input"
+                    type="checkbox"
+                    name="repeat"
+                    value="sa"
+                    id="repeat-sa-4"
+                  />
+                  <label class="card__repeat-day" for="repeat-sa-4"
+                    >sa</label
+                  >
+                  <input
+                    class="visually-hidden card__repeat-day-input"
+                    type="checkbox"
+                    id="repeat-su-4"
+                    name="repeat"
+                    value="su"
+                    checked
+                  />
+                  <label class="card__repeat-day" for="repeat-su-4"
+                    >su</label
+                  >
+                </div>
+              </fieldset>
+            </div>
 
-    const cards = [
-      new Card(`Example default task with default color.`, `23 September`, `11:15 PM`, COLORS[0], [`#todo`, `#personal`, `#important`])
-    ];
+            <div class="card__hashtag">
+              <div class="card__hashtag-list">
+                <span class="card__hashtag-inner">
+                  <input
+                    type="hidden"
+                    name="hashtag"
+                    value="repeat"
+                    class="card__hashtag-hidden-input"
+                  />
+                  <p class="card__hashtag-name">
+                    #repeat
+                  </p>
+                  <button type="button" class="card__hashtag-delete">
+                    delete
+                  </button>
+                </span>
 
-    const Control = function (id, disabled) {
-      this.id = id;
-      this.disabled = disabled;
-    };
+                <span class="card__hashtag-inner">
+                  <input
+                    type="hidden"
+                    name="hashtag"
+                    value="repeat"
+                    class="card__hashtag-hidden-input"
+                  />
+                  <p class="card__hashtag-name">
+                    #cinema
+                  </p>
+                  <button type="button" class="card__hashtag-delete">
+                    delete
+                  </button>
+                </span>
 
-    const controls = [
-      new Control(`edit`, false),
-      new Control(`archive`, false),
-      new Control(`favorites`, true)
-    ];
-    const cardsFragment = document.createDocumentFragment();
-    cards.forEach((element) => {
-      const card = document.createElement(`article`);
-      card.className = `card`;
-      card.classList.add(`card--${element.color}`);
-      const cardForm = document.createElement(`div`);
-      cardForm.className = `card__form`;
-      const cardInner = document.createElement(`div`);
-      cardInner.className = `card__inner`;
-      const cardControl = document.createElement(`div`);
-      cardControl.className = `card__control`;
-      card.appendChild(cardForm).appendChild(cardInner).appendChild(cardControl);
-      const buttonFragment = document.createDocumentFragment();
-      controls.forEach((control) => {
-        const button = document.createElement(`button`);
-        button.type = `button`;
-        button.className = `card__btn card__btn--${control.id}`;
-        button.textContent = control.id;
-        if (control.disabled) {
-          button.classList.add(`card__btn--disabled`);
-        }
-        buttonFragment.appendChild(button);
-      });
-      cardControl.appendChild(buttonFragment);
-      const colorBar = document.createElement(`div`);
-      colorBar.className = `card__color-bar`;
-      cardInner.appendChild(colorBar);
-      const textWrap = document.createElement(`div`);
-      textWrap.className = `card__textarea-wrap`;
-      const text = document.createElement(`p`);
-      text.className = `card__text`;
-      text.textContent = element.text;
-      textWrap.appendChild(text);
-      cardInner.appendChild(textWrap);
-      const cardSettings = document.createElement(`div`);
-      cardSettings.className = `card__settings`;
-      const cardDetails = document.createElement(`div`);
-      cardDetails.className = `card__details`;
-      const cardDates = document.createElement(`div`);
-      cardDates.className = `card__dates`;
-      const cardDateDeadline = document.createElement(`div`);
-      cardDateDeadline.className = `card__date-deadline`;
-      const cardDeadlineWrap = document.createElement(`p`);
-      cardDeadlineWrap.className = `card__input-deadline-wrap`;
-      cardInner.appendChild(cardSettings).appendChild(cardDetails).appendChild(cardDates).appendChild(cardDateDeadline).appendChild(cardDeadlineWrap);
-      const cardDate = document.createElement(`span`);
-      cardDate.className = `card__date`;
-      cardDate.textContent = element.date;
-      const cardTime = document.createElement(`span`);
-      cardTime.textContent = element.time;
-      cardTime.className = `card__time`;
-      cardDeadlineWrap.appendChild(cardDate);
-      cardDeadlineWrap.appendChild(cardTime);
-      const cardHashtag = document.createElement(`div`);
-      const cardHashtagList = document.createElement(`div`);
-      cardHashtag.className = `card__hashtag`;
-      cardHashtagList.className = `card__hashtag-list`;
-      cardDetails.appendChild(cardHashtag).appendChild(cardHashtagList);
-      element.tags.forEach((tag) => {
-        const cardHashtagInner = document.createElement(`span`);
-        cardHashtagInner.className = `card__hashtag-inner`;
-        const cardHashtagName = document.createElement(`span`);
-        cardHashtagName.className = `card__hashtag-name`;
-        cardHashtagName.textContent = tag;
-        cardHashtagList.appendChild(cardHashtagInner).appendChild(cardHashtagName);
-      });
-      cardsFragment.appendChild(card);
-    });
-    renderElement(tasksContainer, cardsFragment);
-  };
+                <span class="card__hashtag-inner">
+                  <input
+                    type="hidden"
+                    name="hashtag"
+                    value="repeat"
+                    class="card__hashtag-hidden-input"
+                  />
+                  <p class="card__hashtag-name">
+                    #entertaiment
+                  </p>
+                  <button type="button" class="card__hashtag-delete">
+                    delete
+                  </button>
+                </span>
+              </div>
 
-  createMenuLayout();
-  createSearchLayout();
-  createFiltersLayout();
-  createContentLayout();
-  createBoardFiltersLayout();
-  createTasksContainerLayout();
-  createCardLayout();
-})();
+              <label>
+                <input
+                  type="text"
+                  class="card__hashtag-input"
+                  name="hashtag-input"
+                  placeholder="Type new hashtag here"
+                />
+              </label>
+            </div>
+          </div>
+
+          <div class="card__colors-inner">
+            <h3 class="card__colors-title">Color</h3>
+            <div class="card__colors-wrap">
+              <input
+                type="radio"
+                id="color-black-4"
+                class="card__color-input card__color-input--black visually-hidden"
+                name="color"
+                value="black"
+              />
+              <label
+                for="color-black-4"
+                class="card__color card__color--black"
+                >black</label
+              >
+              <input
+                type="radio"
+                id="color-yellow-4"
+                class="card__color-input card__color-input--yellow visually-hidden"
+                name="color"
+                value="yellow"
+                checked
+              />
+              <label
+                for="color-yellow-4"
+                class="card__color card__color--yellow"
+                >yellow</label
+              >
+              <input
+                type="radio"
+                id="color-blue-4"
+                class="card__color-input card__color-input--blue visually-hidden"
+                name="color"
+                value="blue"
+              />
+              <label
+                for="color-blue-4"
+                class="card__color card__color--blue"
+                >blue</label
+              >
+              <input
+                type="radio"
+                id="color-green-4"
+                class="card__color-input card__color-input--green visually-hidden"
+                name="color"
+                value="green"
+              />
+              <label
+                for="color-green-4"
+                class="card__color card__color--green"
+                >green</label
+              >
+              <input
+                type="radio"
+                id="color-pink-4"
+                class="card__color-input card__color-input--pink visually-hidden"
+                name="color"
+                value="pink"
+              />
+              <label
+                for="color-pink-4"
+                class="card__color card__color--pink"
+                >pink</label
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="card__status-btns">
+          <button class="card__save" type="submit">save</button>
+          <button class="card__delete" type="button">delete</button>
+        </div>
+      </div>
+    </form>
+  </article>`;
+};
+
+const createTaskLayout = () => {
+  return `<article class="card card--black">
+    <div class="card__form">
+      <div class="card__inner">
+        <div class="card__control">
+          <button type="button" class="card__btn card__btn--edit">
+            edit
+          </button>
+          <button type="button" class="card__btn card__btn--archive">
+            archive
+          </button>
+          <button
+            type="button"
+            class="card__btn card__btn--favorites card__btn--disabled"
+          >
+            favorites
+          </button>
+        </div>
+
+        <div class="card__color-bar">
+          <svg class="card__color-bar-wave" width="100%" height="10">
+            <use xlink:href="#wave"></use>
+          </svg>
+        </div>
+
+        <div class="card__textarea-wrap">
+          <p class="card__text">Example default task with default color.</p>
+        </div>
+
+        <div class="card__settings">
+          <div class="card__details">
+            <div class="card__dates">
+              <div class="card__date-deadline">
+                <p class="card__input-deadline-wrap">
+                  <span class="card__date">23 September</span>
+                  <span class="card__time">11:15 PM</span>
+                </p>
+              </div>
+            </div>
+
+            <div class="card__hashtag">
+              <div class="card__hashtag-list">
+                <span class="card__hashtag-inner">
+                  <span class="card__hashtag-name">
+                    #todo
+                  </span>
+                </span>
+
+                <span class="card__hashtag-inner">
+                  <span class="card__hashtag-name">
+                    #personal
+                  </span>
+                </span>
+
+                <span class="card__hashtag-inner">
+                  <span class="card__hashtag-name">
+                    #important
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>`;
+};
+
+const createLoadMoreButtonLayout = () => {
+  return `<button class="load-more" type="button">load more</button>`;
+};
+
+const siteMainElement = document.querySelector(`.main`);
+const siteHeaderElement = siteMainElement.querySelector(`.main__control`);
+
+render(siteHeaderElement, createMenuLayout(), `beforeend`);
+render(siteMainElement, createSearchLayout(), `beforeend`);
+render(siteMainElement, createFiltersLayout(), `beforeend`);
+render(siteMainElement, createBoardLayout(), `beforeend`);
+
+const boardElement = siteMainElement.querySelector(`.board`);
+const taskListElement = siteMainElement.querySelector(`.board__tasks`);
+
+render(boardElement, createSortingLayout(), `afterbegin`);
+render(taskListElement, createTaskEditLayout(), `beforeend`);
+
+new Array(3).fill(``).forEach(() => render(taskListElement, createTaskLayout(), `beforeend`));
+
+render(boardElement, createLoadMoreButtonLayout(), `beforeend`);
