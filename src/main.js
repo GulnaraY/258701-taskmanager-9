@@ -1,6 +1,5 @@
-'use strict';
 
-const render = (container, template, place) => {
+const render = (container, template, place = `beforeend`) => {
   container.insertAdjacentHTML(place, template);
 };
 
@@ -477,17 +476,17 @@ const createLoadMoreButtonLayout = () => {
 const siteMainElement = document.querySelector(`.main`);
 const siteHeaderElement = siteMainElement.querySelector(`.main__control`);
 
-render(siteHeaderElement, createMenuLayout(), `beforeend`);
-render(siteMainElement, createSearchLayout(), `beforeend`);
-render(siteMainElement, createFiltersLayout(), `beforeend`);
-render(siteMainElement, createBoardLayout(), `beforeend`);
+render(siteHeaderElement, createMenuLayout());
+render(siteMainElement, createSearchLayout());
+render(siteMainElement, createFiltersLayout());
+render(siteMainElement, createBoardLayout());
 
 const boardElement = siteMainElement.querySelector(`.board`);
 const taskListElement = siteMainElement.querySelector(`.board__tasks`);
 
 render(boardElement, createSortingLayout(), `afterbegin`);
-render(taskListElement, createTaskEditLayout(), `beforeend`);
+render(taskListElement, createTaskEditLayout());
 
-new Array(3).fill(``).forEach(() => render(taskListElement, createTaskLayout(), `beforeend`));
+new Array(3).fill(``).forEach(() => render(taskListElement, createTaskLayout()));
 
-render(boardElement, createLoadMoreButtonLayout(), `beforeend`);
+render(boardElement, createLoadMoreButtonLayout());
