@@ -1,6 +1,23 @@
 // Доска для задач
+
+import {createSortingLayout} from './sorting.js';
+import {createTaskEditLayout} from './editing-task.js';
+import {createTaskLayout} from './task.js';
+import {createLoadMoreButtonLayout} from './load-more-button.js';
+
+const TASKS_AMOUNT = 3;
+
 export const createBoardLayout = () => {
+  const tasksLayout = new Array(TASKS_AMOUNT).fill(``).map(() => {
+    return `${createTaskLayout()}`;
+  }).join(``);
+
   return `<section class="board container">
-    <div class="board__tasks"></div>
+  ${createSortingLayout()}
+    <div class="board__tasks">
+    ${createTaskEditLayout()}
+    ${tasksLayout}
+    </div>
+    ${createLoadMoreButtonLayout()}
   </section>`;
 };
