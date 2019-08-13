@@ -15,5 +15,5 @@ node_modules/
 build/
 
 #Собранные файлы
-public/bundle.js,
+public/bundle.js
 public/bundle.js.map
