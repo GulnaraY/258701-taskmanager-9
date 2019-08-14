@@ -1,4 +1,5 @@
 // Генерация данных
+const TASKS_AMOUNT = 3;
 
 export const getTask = () => ({
   description: [
@@ -22,7 +23,7 @@ export const getTask = () => ({
     `practice`,
     `intensive`,
     `keks`,
-  ]),
+  ].splice(Math.floor(Math.random() * 5), Math.round(Math.random() * 3))),
   color: [
     `black`,
     `yellow`,
@@ -30,7 +31,55 @@ export const getTask = () => ({
     `green`,
     `pink`,
   ][Math.floor(Math.random() * 5)],
-  isFavourite: false,
-  isArchive: false,
+  isFavorite: Boolean(Math.round(Math.random())),
+  isArchive: Boolean(Math.round(Math.random())),
 });
+
+export const currentTasks = new Array(TASKS_AMOUNT).fill(``).map(getTask);
+
+const filtersMap = {
+  all: `isArchive`,
+  overdue: `dueDay`,
+  today: `dueDay`,
+  favorites: `isFavorite`,
+  repeating: `repeatingDays`,
+  tags: `tags`,
+  archive: `isArchive`,
+};
+
+const getFilteredDataCount = ((filter) => {
+  let filteredTasksCount;
+  const filterValue = filtersMap[filter];
+  if (filter === `all`) {
+    filteredTasksCount = currentTasks.filter((it) => !it[filterValue]).length;
+  }
+  if ((filter === `archive`) || (filter === `favorites`)) {
+    filteredTasksCount = currentTasks.filter((it) => it[filterValue]).length;
+  }
+  if (filter === `tags`) {
+    filteredTasksCount = currentTasks.filter((it) => Boolean(Array.from(it[filterValue]).length)).length;
+  }
+  if (filter === `today`) {
+    filteredTasksCount = currentTasks.filter((it) => it[filterValue] === Date.now()).length;
+  }
+  if (filter === `overdue`) {
+    filteredTasksCount = currentTasks.filter((it) => it[filterValue] < Date.now()).length;
+  }
+  if (filter === `repeating`) {
+    filteredTasksCount = currentTasks.filter((it) => Object.keys(it[filterValue]).some((day) => it[filterValue][day])).length;
+  }
+  return filteredTasksCount;
+});
+
+export const getFilters = () => {
+  const filters = [];
+  Object.keys(filtersMap).forEach((filter) => {
+    filters.push({
+      title: filter,
+      count: getFilteredDataCount(filter),
+    });
+  });
+  return filters;
+};
+
 

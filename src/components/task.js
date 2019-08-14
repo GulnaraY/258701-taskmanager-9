@@ -41,7 +41,7 @@ export const makeTask = ({description, dueDay, repeatingDays, tags, color}) => {
 
             <div class="card__hashtag">
               <div class="card__hashtag-list">
-              ${Array.from(tags).splice(Math.floor(Math.random() * 5), Math.round(Math.random() * 3)).map((tag) => `<span class="card__hashtag-inner">
+              ${Array.from(tags).map((tag) => `<span class="card__hashtag-inner">
               <span class="card__hashtag-name">
               #${tag}
               </span>
