@@ -1,5 +1,5 @@
 // Генерация данных
-const TASKS_AMOUNT = 3;
+const TASKS_AMOUNT = 20;
 
 export const getTask = () => ({
   description: [

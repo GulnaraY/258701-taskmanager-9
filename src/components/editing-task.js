@@ -1,15 +1,16 @@
 // Карточка редактирования задачи
-export const createTaskEditLayout = () => {
-  return `<article class="card card--edit card--yellow card--repeat">
+export const makeEditingTask = ({description, dueDay, repeatingDays, tags, color, isFavorite, isArchive}) => {
+
+  return `<article class="card card--edit card--${color} ${Object.keys(repeatingDays).some((day) => repeatingDays[day]) ? `card--repeat` : ``}">
     <form class="card__form" method="get">
       <div class="card__inner">
         <div class="card__control">
-          <button type="button" class="card__btn card__btn--archive">
+          <button type="button" class="card__btn card__btn--archive ${isArchive ? `card__btn--disabled` : ``}">
             archive
           </button>
           <button
             type="button"
-            class="card__btn card__btn--favorites card__btn--disabled"
+            class="card__btn card__btn--favorites card__btn--disabled  ${isFavorite ? `card__btn--disabled` : ``}"
           >
             favorites
           </button>
@@ -27,7 +28,7 @@ export const createTaskEditLayout = () => {
               class="card__text"
               placeholder="Start typing your text here..."
               name="text"
-            >Here is a card with filled data</textarea>
+            >${description}</textarea>
           </label>
         </div>
 
@@ -35,7 +36,7 @@ export const createTaskEditLayout = () => {
           <div class="card__details">
             <div class="card__dates">
               <button class="card__date-deadline-toggle" type="button">
-                date: <span class="card__date-status">yes</span>
+                date: <span class="card__date-status">${dueDay ? `yes` : `no`}</span>
               </button>
 
               <fieldset class="card__date-deadline">
@@ -45,13 +46,13 @@ export const createTaskEditLayout = () => {
                     type="text"
                     placeholder=""
                     name="date"
-                    value="23 September 11:15 PM"
+                    value="${new Date(dueDay).toDateString()}"
                   />
                 </label>
               </fieldset>
 
               <button class="card__repeat-toggle" type="button">
-                repeat:<span class="card__repeat-status">yes</span>
+                repeat:<span class="card__repeat-status">${Object.keys(repeatingDays).some((day) => repeatingDays[day]) ? `yes` : `no`}</span>
               </button>
 
               <fieldset class="card__repeat-days">
@@ -62,6 +63,7 @@ export const createTaskEditLayout = () => {
                     id="repeat-mo-4"
                     name="repeat"
                     value="mo"
+                    ${repeatingDays[`mo`] ? `checked` : ``}
                   />
                   <label class="card__repeat-day" for="repeat-mo-4"
                     >mo</label
@@ -72,7 +74,7 @@ export const createTaskEditLayout = () => {
                     id="repeat-tu-4"
                     name="repeat"
                     value="tu"
-                    checked
+                    ${repeatingDays[`tu`] ? `checked` : ``}
                   />
                   <label class="card__repeat-day" for="repeat-tu-4"
                     >tu</label
@@ -83,6 +85,7 @@ export const createTaskEditLayout = () => {
                     id="repeat-we-4"
                     name="repeat"
                     value="we"
+                    ${repeatingDays[`we`] ? `checked` : ``}
                   />
                   <label class="card__repeat-day" for="repeat-we-4"
                     >we</label
@@ -93,6 +96,7 @@ export const createTaskEditLayout = () => {
                     id="repeat-th-4"
                     name="repeat"
                     value="th"
+                    ${repeatingDays[`th`] ? `checked` : ``}
                   />
                   <label class="card__repeat-day" for="repeat-th-4"
                     >th</label
@@ -103,7 +107,7 @@ export const createTaskEditLayout = () => {
                     id="repeat-fr-4"
                     name="repeat"
                     value="fr"
-                    checked
+                    ${repeatingDays[`fr`] ? `checked` : ``}
                   />
                   <label class="card__repeat-day" for="repeat-fr-4"
                     >fr</label
@@ -114,6 +118,7 @@ export const createTaskEditLayout = () => {
                     name="repeat"
                     value="sa"
                     id="repeat-sa-4"
+                    ${repeatingDays[`sa`] ? `checked` : ``}
                   />
                   <label class="card__repeat-day" for="repeat-sa-4"
                     >sa</label
@@ -124,7 +129,7 @@ export const createTaskEditLayout = () => {
                     id="repeat-su-4"
                     name="repeat"
                     value="su"
-                    checked
+                    ${repeatingDays[`su`] ? `checked` : ``}
                   />
                   <label class="card__repeat-day" for="repeat-su-4"
                     >su</label
@@ -135,52 +140,21 @@ export const createTaskEditLayout = () => {
 
             <div class="card__hashtag">
               <div class="card__hashtag-list">
-                <span class="card__hashtag-inner">
-                  <input
-                    type="hidden"
-                    name="hashtag"
-                    value="repeat"
-                    class="card__hashtag-hidden-input"
-                  />
-                  <p class="card__hashtag-name">
-                    #repeat
-                  </p>
-                  <button type="button" class="card__hashtag-delete">
-                    delete
-                  </button>
-                </span>
-
-                <span class="card__hashtag-inner">
-                  <input
-                    type="hidden"
-                    name="hashtag"
-                    value="repeat"
-                    class="card__hashtag-hidden-input"
-                  />
-                  <p class="card__hashtag-name">
-                    #cinema
-                  </p>
-                  <button type="button" class="card__hashtag-delete">
-                    delete
-                  </button>
-                </span>
-
-                <span class="card__hashtag-inner">
-                  <input
-                    type="hidden"
-                    name="hashtag"
-                    value="repeat"
-                    class="card__hashtag-hidden-input"
-                  />
-                  <p class="card__hashtag-name">
-                    #entertaiment
-                  </p>
-                  <button type="button" class="card__hashtag-delete">
-                    delete
-                  </button>
-                </span>
-              </div>
-
+              ${Array.from(tags).map((tag) => `<span class="card__hashtag-inner">
+              <input
+                type="hidden"
+                name="hashtag"
+                value="repeat"
+                class="card__hashtag-hidden-input"
+              />
+              <p class="card__hashtag-name">
+              #${tag}
+              </p>
+              <button type="button" class="card__hashtag-delete">
+                delete
+              </button>
+            </span>`).join(``)}
+            </div>
               <label>
                 <input
                   type="text"
@@ -201,6 +175,7 @@ export const createTaskEditLayout = () => {
                 class="card__color-input card__color-input--black visually-hidden"
                 name="color"
                 value="black"
+                ${color === `black` ? `checked` : ``}
               />
               <label
                 for="color-black-4"
@@ -213,7 +188,7 @@ export const createTaskEditLayout = () => {
                 class="card__color-input card__color-input--yellow visually-hidden"
                 name="color"
                 value="yellow"
-                checked
+                ${color === `yellow` ? `checked` : ``}
               />
               <label
                 for="color-yellow-4"
@@ -226,6 +201,7 @@ export const createTaskEditLayout = () => {
                 class="card__color-input card__color-input--blue visually-hidden"
                 name="color"
                 value="blue"
+                ${color === `blue` ? `checked` : ``}
               />
               <label
                 for="color-blue-4"
@@ -238,6 +214,7 @@ export const createTaskEditLayout = () => {
                 class="card__color-input card__color-input--green visually-hidden"
                 name="color"
                 value="green"
+                ${color === `green` ? `checked` : ``}
               />
               <label
                 for="color-green-4"
@@ -250,6 +227,7 @@ export const createTaskEditLayout = () => {
                 class="card__color-input card__color-input--pink visually-hidden"
                 name="color"
                 value="pink"
+                ${color === `pink` ? `checked` : ``}
               />
               <label
                 for="color-pink-4"
