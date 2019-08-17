@@ -1,7 +1,7 @@
 // Карточка редактирования задачи
 export const makeEditingTask = ({description, dueDay, repeatingDays, tags, color, isFavorite, isArchive}) => {
-
-  return `<article class="card card--edit card--${color} ${Object.keys(repeatingDays).some((day) => repeatingDays[day]) ? `card--repeat` : ``}">
+  const isRepeating = Object.keys(repeatingDays).some((day) => repeatingDays[day]);
+  return `<article class="card card--edit card--${color} ${isRepeating ? `card--repeat` : ``}">
     <form class="card__form" method="get">
       <div class="card__inner">
         <div class="card__control">
@@ -52,7 +52,7 @@ export const makeEditingTask = ({description, dueDay, repeatingDays, tags, color
               </fieldset>
 
               <button class="card__repeat-toggle" type="button">
-                repeat:<span class="card__repeat-status">${Object.keys(repeatingDays).some((day) => repeatingDays[day]) ? `yes` : `no`}</span>
+                repeat:<span class="card__repeat-status">${isRepeating ? `yes` : `no`}</span>
               </button>
 
               <fieldset class="card__repeat-days">
