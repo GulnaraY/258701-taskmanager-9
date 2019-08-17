@@ -4,7 +4,7 @@ import {makeTask} from './task.js';
 import {createLoadMoreButtonLayout} from './load-more-button.js';
 import {currentTasks} from '../data.js';
 import {makeEditingTask} from './editing-task.js';
-let isFirstRender = false;
+let isFirstRender = true;
 let tasksToLoad;
 
 export const createBoardLayout = () => {
@@ -12,7 +12,7 @@ export const createBoardLayout = () => {
   let tasksCount = 8;
   let layout;
 
-  if (!isFirstRender) {
+  if (isFirstRender) {
     dataIndex = 1;
     tasksCount = 7;
     tasksToLoad = currentTasks;
@@ -21,7 +21,7 @@ export const createBoardLayout = () => {
   tasksToLoad.splice(0, 8);
   const tasksLayout = tasksToRender.slice(dataIndex, dataIndex + tasksCount).map(makeTask).join(``);
 
-  if (!isFirstRender) {
+  if (isFirstRender) {
     const editingTaskLayout = tasksToRender.slice(0, 1).map(makeEditingTask).join(``);
     layout = `<section class="board container">
     ${createSortingLayout()}
@@ -31,7 +31,7 @@ export const createBoardLayout = () => {
     </div>
     ${tasksToLoad.length > 0 ? createLoadMoreButtonLayout() : ``}
     </section>`;
-    isFirstRender = true;
+    isFirstRender = false;
   } else {
     layout = `${tasksLayout}`;
   }
@@ -39,6 +39,5 @@ export const createBoardLayout = () => {
 };
 export const getTasksToLoad = () => {
   return tasksToLoad;
-
 };
 
