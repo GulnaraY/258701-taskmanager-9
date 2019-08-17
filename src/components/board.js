@@ -5,7 +5,7 @@ import {createLoadMoreButtonLayout} from './load-more-button.js';
 import {currentTasks} from '../data.js';
 import {makeEditingTask} from './editing-task.js';
 let isFirstRender = false;
-export let tasksToLoad;
+let tasksToLoad;
 
 export const createBoardLayout = () => {
   let dataIndex = 0;
