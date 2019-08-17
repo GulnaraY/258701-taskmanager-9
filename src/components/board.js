@@ -37,3 +37,8 @@ export const createBoardLayout = () => {
   }
   return layout;
 };
+export const getTasksToLoad = () => {
+  return tasksToLoad;
+
+};
+
