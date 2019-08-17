@@ -1,6 +1,6 @@
 // Карточка редактирования задачи
 
-const daysOfWeekMap = {
+const DaysOfWeek = {
   monday: `mo`,
   tuesday: `tu`,
   wednesday: `we`,
@@ -9,6 +9,14 @@ const daysOfWeekMap = {
   saturday: `sa`,
   sunday: `su`
 };
+
+const colors = new Set([
+  `black`,
+  `yellow`,
+  `blue`,
+  `green`,
+  `pink`,
+]);
 
 export const makeEditingTask = ({description, dueDay, repeatingDays, tags, color, isFavorite, isArchive}) => {
   const isRepeating = Object.keys(repeatingDays).some((day) => repeatingDays[day]);
@@ -68,16 +76,16 @@ export const makeEditingTask = ({description, dueDay, repeatingDays, tags, color
 
               <fieldset class="card__repeat-days">
                 <div class="card__repeat-days-inner">
-                ${Object.keys(daysOfWeekMap).map((day) => `<input
+                ${Object.keys(DaysOfWeek).map((day) => `<input
                 class="visually-hidden card__repeat-day-input"
                 type="checkbox"
-                id="repeat-${daysOfWeekMap[day]}-4"
+                id="repeat-${DaysOfWeek[day]}-4"
                 name="repeat"
-                value="${daysOfWeekMap[day]}"
-                ${repeatingDays[daysOfWeekMap[day]] ? `checked` : ``}
+                value="${DaysOfWeek[day]}"
+                ${repeatingDays[DaysOfWeek[day]] ? `checked` : ``}
               />
-              <label class="card__repeat-day" for="repeat-${daysOfWeekMap[day]}-4"
-                >${daysOfWeekMap[day]}</label
+              <label class="card__repeat-day" for="repeat-${DaysOfWeek[day]}-4"
+                >${DaysOfWeek[day]}</label
               >`).join(``)}
                 </div>
               </fieldset>
@@ -114,71 +122,18 @@ export const makeEditingTask = ({description, dueDay, repeatingDays, tags, color
           <div class="card__colors-inner">
             <h3 class="card__colors-title">Color</h3>
             <div class="card__colors-wrap">
-              <input
-                type="radio"
-                id="color-black-4"
-                class="card__color-input card__color-input--black visually-hidden"
-                name="color"
-                value="black"
-                ${color === `black` ? `checked` : ``}
-              />
-              <label
-                for="color-black-4"
-                class="card__color card__color--black"
-                >black</label
-              >
-              <input
-                type="radio"
-                id="color-yellow-4"
-                class="card__color-input card__color-input--yellow visually-hidden"
-                name="color"
-                value="yellow"
-                ${color === `yellow` ? `checked` : ``}
-              />
-              <label
-                for="color-yellow-4"
-                class="card__color card__color--yellow"
-                >yellow</label
-              >
-              <input
-                type="radio"
-                id="color-blue-4"
-                class="card__color-input card__color-input--blue visually-hidden"
-                name="color"
-                value="blue"
-                ${color === `blue` ? `checked` : ``}
-              />
-              <label
-                for="color-blue-4"
-                class="card__color card__color--blue"
-                >blue</label
-              >
-              <input
-                type="radio"
-                id="color-green-4"
-                class="card__color-input card__color-input--green visually-hidden"
-                name="color"
-                value="green"
-                ${color === `green` ? `checked` : ``}
-              />
-              <label
-                for="color-green-4"
-                class="card__color card__color--green"
-                >green</label
-              >
-              <input
-                type="radio"
-                id="color-pink-4"
-                class="card__color-input card__color-input--pink visually-hidden"
-                name="color"
-                value="pink"
-                ${color === `pink` ? `checked` : ``}
-              />
-              <label
-                for="color-pink-4"
-                class="card__color card__color--pink"
-                >pink</label
-              >
+              ${Array.from(colors).map((item) => `<input type="radio"
+              id="color-${item}-4"
+              class="card__color-input card__color-input--${item} visually-hidden"
+              name="color"
+              value="${item}"
+              ${color === `${item}` ? `checked` : ``}
+            />
+            <label
+              for="color-${item}-4"
+              class="card__color card__color--${item}"
+              >${item}</label
+            >`).join(``)}
             </div>
           </div>
         </div>
