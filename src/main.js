@@ -10,10 +10,6 @@ const render = (container, template, place = `beforeend`) => {
   container.insertAdjacentHTML(place, template);
 };
 
-const removeElement = (container, element) => {
-  container.removeChild(element);
-};
-
 // Рендер элементов на страницу
 const siteMainElement = document.querySelector(`.main`);
 const siteHeaderElement = siteMainElement.querySelector(`.main__control`);
@@ -30,7 +26,7 @@ if (loadMoreButton) {
   const onLoadMoreButtonClick = (() => {
     render(boardTasks, createBoardLayout());
     if (getTasksToLoad().length === 0) {
-      removeElement(board, loadMoreButton);
+      loadMoreButton.remove();
     }
   });
 
