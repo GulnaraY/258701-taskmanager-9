@@ -1,4 +1,15 @@
 // Карточка редактирования задачи
+
+const daysOfWeekMap = {
+  monday: `mo`,
+  tuesday: `tu`,
+  wednesday: `we`,
+  thursday: `th`,
+  friday: `fr`,
+  saturday: `sa`,
+  sunday: `su`
+};
+
 export const makeEditingTask = ({description, dueDay, repeatingDays, tags, color, isFavorite, isArchive}) => {
   const isRepeating = Object.keys(repeatingDays).some((day) => repeatingDays[day]);
   return `<article class="card card--edit card--${color} ${isRepeating ? `card--repeat` : ``}">
@@ -57,83 +68,17 @@ export const makeEditingTask = ({description, dueDay, repeatingDays, tags, color
 
               <fieldset class="card__repeat-days">
                 <div class="card__repeat-days-inner">
-                  <input
-                    class="visually-hidden card__repeat-day-input"
-                    type="checkbox"
-                    id="repeat-mo-4"
-                    name="repeat"
-                    value="mo"
-                    ${repeatingDays[`mo`] ? `checked` : ``}
-                  />
-                  <label class="card__repeat-day" for="repeat-mo-4"
-                    >mo</label
-                  >
-                  <input
-                    class="visually-hidden card__repeat-day-input"
-                    type="checkbox"
-                    id="repeat-tu-4"
-                    name="repeat"
-                    value="tu"
-                    ${repeatingDays[`tu`] ? `checked` : ``}
-                  />
-                  <label class="card__repeat-day" for="repeat-tu-4"
-                    >tu</label
-                  >
-                  <input
-                    class="visually-hidden card__repeat-day-input"
-                    type="checkbox"
-                    id="repeat-we-4"
-                    name="repeat"
-                    value="we"
-                    ${repeatingDays[`we`] ? `checked` : ``}
-                  />
-                  <label class="card__repeat-day" for="repeat-we-4"
-                    >we</label
-                  >
-                  <input
-                    class="visually-hidden card__repeat-day-input"
-                    type="checkbox"
-                    id="repeat-th-4"
-                    name="repeat"
-                    value="th"
-                    ${repeatingDays[`th`] ? `checked` : ``}
-                  />
-                  <label class="card__repeat-day" for="repeat-th-4"
-                    >th</label
-                  >
-                  <input
-                    class="visually-hidden card__repeat-day-input"
-                    type="checkbox"
-                    id="repeat-fr-4"
-                    name="repeat"
-                    value="fr"
-                    ${repeatingDays[`fr`] ? `checked` : ``}
-                  />
-                  <label class="card__repeat-day" for="repeat-fr-4"
-                    >fr</label
-                  >
-                  <input
-                    class="visually-hidden card__repeat-day-input"
-                    type="checkbox"
-                    name="repeat"
-                    value="sa"
-                    id="repeat-sa-4"
-                    ${repeatingDays[`sa`] ? `checked` : ``}
-                  />
-                  <label class="card__repeat-day" for="repeat-sa-4"
-                    >sa</label
-                  >
-                  <input
-                    class="visually-hidden card__repeat-day-input"
-                    type="checkbox"
-                    id="repeat-su-4"
-                    name="repeat"
-                    value="su"
-                    ${repeatingDays[`su`] ? `checked` : ``}
-                  />
-                  <label class="card__repeat-day" for="repeat-su-4"
-                    >su</label
-                  >
+                ${Object.keys(daysOfWeekMap).map((day) => `<input
+                class="visually-hidden card__repeat-day-input"
+                type="checkbox"
+                id="repeat-${daysOfWeekMap[day]}-4"
+                name="repeat"
+                value="${daysOfWeekMap[day]}"
+                ${repeatingDays[daysOfWeekMap[day]] ? `checked` : ``}
+              />
+              <label class="card__repeat-day" for="repeat-${daysOfWeekMap[day]}-4"
+                >${daysOfWeekMap[day]}</label
+              >`).join(``)}
                 </div>
               </fieldset>
             </div>
