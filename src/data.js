@@ -73,8 +73,8 @@ const getFilteredDataCount = ((filter) => {
 
 export const getFilters = () => {
   const filters = [];
-  Object.keys(filtersMap).forEach((filter) => {
-    filters.push({
+  Object.keys(filtersMap).map((filter) => {
+    return filters.push({
       title: filter,
       count: getFilteredDataCount(filter),
     });
