@@ -31,14 +31,13 @@ export const makeTask = ({description, dueDay, repeatingDays, tags, color}) => {
 
         <div class="card__settings">
           <div class="card__details">
-            <div class="card__dates">
+          ${dueDay ? `<div class="card__dates">
               <div class="card__date-deadline">
                 <p class="card__input-deadline-wrap">
                   <span class="card__date">${new Date(dueDay).toDateString()}</span>
                 </p>
               </div>
-            </div>
-
+            </div>` : ``}
             <div class="card__hashtag">
               <div class="card__hashtag-list">
               ${Array.from(tags).map((tag) => `<span class="card__hashtag-inner">

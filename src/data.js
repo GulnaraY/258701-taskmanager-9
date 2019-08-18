@@ -8,39 +8,44 @@ const getRamdomValue = ((max, min = 0) => Math.floor(Math.random() * (max - min)
 
 const getRandomBoolean = (() => Boolean(Math.round(Math.random())));
 
-export const getTask = () => ({
-  description: getRamdomElement([
-    `Изучить теорию`,
-    `Сделать домашку`,
-    `Пройти интенсив на соточку`,
-  ]),
-  dueDay: Date.now() + getRamdomValue(7, -7) * MS_IN_DAY,
-  repeatingDays: {
-    'mo': false,
-    'tu': false,
-    'we': getRandomBoolean(),
-    'th': false,
-    'fr': false,
-    'sa': false,
-    'su': false,
-  },
-  tags: new Set([
-    `homework`,
-    `theory`,
-    `practice`,
-    `intensive`,
-    `keks`,
-  ].splice(getRamdomValue(5), getRamdomValue(3))),
-  color: getRamdomElement([
-    `black`,
-    `yellow`,
-    `blue`,
-    `green`,
-    `pink`,
-  ]),
-  isFavorite: getRandomBoolean(),
-  isArchive: getRandomBoolean(),
-});
+export const getTask = () => {
+  let task = {
+    description: getRamdomElement([
+      `Изучить теорию`,
+      `Сделать домашку`,
+      `Пройти интенсив на соточку`,
+    ]),
+    repeatingDays: {
+      'mo': false,
+      'tu': false,
+      'we': getRandomBoolean(),
+      'th': false,
+      'fr': false,
+      'sa': false,
+      'su': false,
+    },
+    dueDay: Date.now() + getRamdomValue(7, -7) * MS_IN_DAY,
+    tags: new Set([
+      `homework`,
+      `theory`,
+      `practice`,
+      `intensive`,
+      `keks`,
+    ].splice(getRamdomValue(5), getRamdomValue(3))),
+    color: getRamdomElement([
+      `black`,
+      `yellow`,
+      `blue`,
+      `green`,
+      `pink`,
+    ]),
+    isFavorite: getRandomBoolean(),
+    isArchive: getRandomBoolean(),
+  };
+
+  task.dueDay = !Object.keys(task.repeatingDays).some((day) => task.repeatingDays[day]) ? Date.now() + getRamdomValue(7, -7) * MS_IN_DAY : ``;
+  return task;
+};
 
 const genratedTasks = new Array(TASKS_AMOUNT).fill(``).map(getTask);
 export const editingTask = genratedTasks.slice(0, 1);
