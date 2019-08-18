@@ -4,25 +4,21 @@ import {makeTask} from './task.js';
 import {createLoadMoreButtonLayout} from './load-more-button.js';
 import {currentTasks} from '../data.js';
 import {makeEditingTask} from './editing-task.js';
+import {editingTask} from '../data.js';
+
+const TASCS_COUNT_IN_RENDER = 8;
+const FIRST_TASKS_INDEX = 0;
 let isFirstRender = true;
-let tasksToLoad;
+let tasksToLoad = currentTasks;
 
 export const createBoardLayout = () => {
-  let dataIndex = 0;
-  let tasksCount = 8;
   let layout;
-
-  if (isFirstRender) {
-    dataIndex = 1;
-    tasksCount = 7;
-    tasksToLoad = currentTasks;
-  }
   const tasksToRender = tasksToLoad.slice();
-  tasksToLoad.splice(0, 8);
-  const tasksLayout = tasksToRender.slice(dataIndex, dataIndex + tasksCount).map(makeTask).join(``);
+  tasksToLoad.splice(FIRST_TASKS_INDEX, TASCS_COUNT_IN_RENDER);
+  const tasksLayout = tasksToRender.slice(FIRST_TASKS_INDEX, FIRST_TASKS_INDEX + TASCS_COUNT_IN_RENDER).map(makeTask).join(``);
 
   if (isFirstRender) {
-    const editingTaskLayout = tasksToRender.slice(0, 1).map(makeEditingTask).join(``);
+    const editingTaskLayout = editingTask.map(makeEditingTask).join(``);
     layout = `<section class="board container">
     ${createSortingLayout()}
     <div class="board__tasks">
@@ -37,7 +33,6 @@ export const createBoardLayout = () => {
   }
   return layout;
 };
-export const getTasksToLoad = () => {
-  return tasksToLoad;
-};
+
+export const getTasksToLoadCount = (() => tasksToLoad.length);
 

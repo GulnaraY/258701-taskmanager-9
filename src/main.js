@@ -3,7 +3,7 @@ import {createMenuLayout} from './components/site-menu.js';
 import {createSearchLayout} from './components/search.js';
 import {createFiltersLayout} from './components/filters.js';
 import {createBoardLayout} from './components/board.js';
-import {getTasksToLoad} from './components/board.js';
+import {getTasksToLoadCount} from './components/board.js';
 
 // Функция рендеринга
 const render = (container, template, place = `beforeend`) => {
@@ -25,7 +25,7 @@ if (loadMoreButton) {
   const boardTasks = board.querySelector(`.board__tasks`);
   const onLoadMoreButtonClick = (() => {
     render(boardTasks, createBoardLayout());
-    if (getTasksToLoad().length === 0) {
+    if (getTasksToLoadCount() === 0) {
       loadMoreButton.remove();
     }
   });

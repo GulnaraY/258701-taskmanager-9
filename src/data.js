@@ -1,17 +1,24 @@
 // Генерация данных
 const TASKS_AMOUNT = 20;
+const MS_IN_DAY = 24 * 60 * 60 * 1000;
+
+const getRamdomElement = ((elements) => elements[Math.floor(Math.random() * elements.length)]);
+
+const getRamdomValue = ((max, min = 0) => Math.floor(Math.random() * (max - min) + min));
+
+const getRandomBoolean = (() => Boolean(Math.round(Math.random())));
 
 export const getTask = () => ({
-  description: [
+  description: getRamdomElement([
     `Изучить теорию`,
     `Сделать домашку`,
     `Пройти интенсив на соточку`,
-  ][Math.floor(Math.random() * 3)],
-  dueDay: Date.now() + Math.floor(Math.random() * (7 - -7) + -7) * 24 * 60 * 60 * 1000,
+  ]),
+  dueDay: Date.now() + getRamdomValue(7, -7) * MS_IN_DAY,
   repeatingDays: {
     'mo': false,
     'tu': false,
-    'we': Boolean(Math.round(Math.random())),
+    'we': getRandomBoolean(),
     'th': false,
     'fr': false,
     'sa': false,
@@ -23,19 +30,21 @@ export const getTask = () => ({
     `practice`,
     `intensive`,
     `keks`,
-  ].splice(Math.floor(Math.random() * 5), Math.round(Math.random() * 3))),
-  color: [
+  ].splice(getRamdomValue(5), getRamdomValue(3))),
+  color: getRamdomElement([
     `black`,
     `yellow`,
     `blue`,
     `green`,
     `pink`,
-  ][Math.floor(Math.random() * 5)],
-  isFavorite: Boolean(Math.round(Math.random())),
-  isArchive: Boolean(Math.round(Math.random())),
+  ]),
+  isFavorite: getRandomBoolean(),
+  isArchive: getRandomBoolean(),
 });
 
-export const currentTasks = new Array(TASKS_AMOUNT).fill(``).map(getTask);
+const genratedTasks = new Array(TASKS_AMOUNT).fill(``).map(getTask);
+export const editingTask = genratedTasks.slice(0, 1);
+export const currentTasks = genratedTasks.slice(1);
 
 const filtersMap = {
   all: `isArchive`,
@@ -78,10 +87,10 @@ const filtersCounts = currentTasks.reduce((accum, value) => {
   if (value.isFavorite) {
     accumulator.favorites = accum.favorites + 1;
   }
-  if (Math.floor(value.dueDay / (24 * 60 * 60 * 1000)) === Math.floor(Date.now() / (24 * 60 * 60 * 1000))) {
+  if (Math.floor(value.dueDay / MS_IN_DAY) === Math.floor(Date.now() / MS_IN_DAY)) {
     accumulator.today = accum.today + 1;
   }
-  if (Math.floor(value.dueDay / (24 * 60 * 60 * 1000)) < Math.floor(Date.now() / (24 * 60 * 60 * 1000))) {
+  if (Math.floor(value.dueDay / MS_IN_DAY) < Math.floor(Date.now() / MS_IN_DAY)) {
     accumulator.overdue = accum.overdue + 1;
   }
   if (Object.keys(value.repeatingDays).some((day) => value.repeatingDays[day])) {
