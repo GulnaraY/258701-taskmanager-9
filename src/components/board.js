@@ -9,13 +9,14 @@ import {editingTask} from '../data.js';
 const TASCS_COUNT_IN_RENDER = 8;
 const FIRST_TASKS_INDEX = 0;
 let isFirstRender = true;
-let tasksToLoad = currentTasks;
+let renderCount = 0;
 
 export const createBoardLayout = () => {
   let layout;
-  const tasksToRender = tasksToLoad.slice();
-  tasksToLoad.splice(FIRST_TASKS_INDEX, TASCS_COUNT_IN_RENDER);
+
+  const tasksToRender = currentTasks.slice(FIRST_TASKS_INDEX + renderCount * TASCS_COUNT_IN_RENDER, TASCS_COUNT_IN_RENDER + renderCount * TASCS_COUNT_IN_RENDER);
   const tasksLayout = tasksToRender.slice(FIRST_TASKS_INDEX, FIRST_TASKS_INDEX + TASCS_COUNT_IN_RENDER).map(makeTask).join(``);
+  renderCount++;
 
   if (isFirstRender) {
     const editingTaskLayout = editingTask.map(makeEditingTask).join(``);
@@ -25,7 +26,7 @@ export const createBoardLayout = () => {
     ${editingTaskLayout}
     ${tasksLayout}
     </div>
-    ${tasksToLoad.length > 0 ? createLoadMoreButtonLayout() : ``}
+    ${getTasksToLoadCount() > 0 ? createLoadMoreButtonLayout() : ``}
     </section>`;
     isFirstRender = false;
   } else {
@@ -34,5 +35,5 @@ export const createBoardLayout = () => {
   return layout;
 };
 
-export const getTasksToLoadCount = (() => tasksToLoad.length);
+export const getTasksToLoadCount = (() => currentTasks.slice(FIRST_TASKS_INDEX + renderCount * TASCS_COUNT_IN_RENDER, TASCS_COUNT_IN_RENDER + renderCount * TASCS_COUNT_IN_RENDER).length);
 

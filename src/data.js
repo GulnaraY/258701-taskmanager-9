@@ -9,7 +9,7 @@ const getRamdomValue = ((max, min = 0) => Math.floor(Math.random() * (max - min)
 const getRandomBoolean = (() => Boolean(Math.round(Math.random())));
 
 export const getTask = () => {
-  let task = {
+  const task = {
     description: getRamdomElement([
       `Изучить теорию`,
       `Сделать домашку`,
@@ -62,17 +62,16 @@ const filtersMap = {
 };
 
 export const getFilters = () => {
-  const filters = [];
-  Object.keys(filtersMap).map((filter) => {
-    return filters.push({
+  const filters = Object.keys(filtersMap).map((filter) => {
+    return {
       title: filter,
       count: filtersCounts[filter],
-    });
+    };
   });
   return filters;
 };
 
-let accumulator = {
+const accumulator = {
   all: 0,
   overdue: 0,
   today: 0,
@@ -98,7 +97,7 @@ const filtersCounts = currentTasks.reduce((accum, value) => {
   if (Math.floor(value.dueDay / MS_IN_DAY) < Math.floor(Date.now() / MS_IN_DAY)) {
     accumulator.overdue = accum.overdue + 1;
   }
-  if (Object.keys(value.repeatingDays).some((day) => value.repeatingDays[day])) {
+  if (Object.values(value.repeatingDays).some((x) => x === true)) {
     accumulator.repeating = accum.repeating + 1;
   }
   if (Array.from(value.tags).length) {

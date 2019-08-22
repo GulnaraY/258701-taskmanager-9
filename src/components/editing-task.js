@@ -1,16 +1,16 @@
 // Карточка редактирования задачи
 
 const DaysOfWeek = {
-  monday: `mo`,
-  tuesday: `tu`,
-  wednesday: `we`,
-  thursday: `th`,
-  friday: `fr`,
-  saturday: `sa`,
-  sunday: `su`
+  MONDAY: `mo`,
+  TUESDAY: `tu`,
+  WEDNESDAY: `we`,
+  THURSDAY: `th`,
+  FRIDAY: `fr`,
+  SATURDAY: `sa`,
+  SUNDAY: `su`
 };
 
-const colors = new Set([
+const COLORS = new Set([
   `black`,
   `yellow`,
   `blue`,
@@ -122,7 +122,7 @@ export const makeEditingTask = ({description, dueDay, repeatingDays, tags, color
           <div class="card__colors-inner">
             <h3 class="card__colors-title">Color</h3>
             <div class="card__colors-wrap">
-              ${Array.from(colors).map((item) => `<input type="radio"
+              ${Array.from(COLORS).map((item) => `<input type="radio"
               id="color-${item}-4"
               class="card__color-input card__color-input--${item} visually-hidden"
               name="color"
